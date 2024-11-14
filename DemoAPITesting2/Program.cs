@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using DemoAPITesting2;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using System;
-using System.Text.Json;
+using RestSharp;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace DemoAPITesting
@@ -71,7 +71,29 @@ namespace DemoAPITesting
             t["name"],
             string.Join(", ", t["products"])
             ));
-            //
+
+            // Executing simple HTTP Request with RestSharp
+            var client = new RestClient("https://api.github.com");
+            var request = new RestRequest("/users/softuni/repos", Method.Get);
+            var response = client.Execute(request);
+
+            //Console.WriteLine(response.StatusCode);
+            //Console.WriteLine(response.Content);
+
+            //  Using URL Segments
+            var requestUrlSegments = new RestRequest("/repos/{user}/{repo}/issues/{id}", Method.Get);
+            requestUrlSegments.AddUrlSegment("user", "testnakov");
+            requestUrlSegments.AddUrlSegment("repo", "test-nakov-repo");
+            requestUrlSegments.AddUrlSegment("id", 1);
+
+            var responseUrlSegment = client.Execute(requestUrlSegments);
+            Console.WriteLine(responseUrlSegment.StatusCode);
+            Console.WriteLine(responseUrlSegment.Content);
+
+            //  Deserializing json response
+            var requestDeserializing = new RestRequest("/users/softuni/repos", Method.Get);
+            var responseDeserializing = client.Execute(requestDeserializing);
+            var repos = JsonConvert.DeserializeObject<List<Repo>>(responseDeserializing.Content);
         }
     }
 }
