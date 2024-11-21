@@ -154,6 +154,7 @@
 						"exec": [
 							"pm.test(\"Response status code is 200\", function () {\r",
 							"pm.expect(pm.response.code).to.equal(200);\r",
+							"// pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
 							"const responseData = pm.response.json();\r",
@@ -166,6 +167,9 @@
 							"    // pm.expect(pm.response.json().length).to.be.above(0);\r",
 							"    // pm.expect(responseData.length).to.be.greaterThan(0)\r",
 							"});\r",
+							"\r",
+							"const lastIdeaId = responseData[responseData.length - 1].id;\r",
+							"pm.collectionVariables.set(\"lastIdeaId\", lastIdeaId);\r",
 							"\r",
 							""
 						],
@@ -210,6 +214,165 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Edit the Last Idea",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"// pm.expect(pm.response.code).to.equal(200);\r",
+							"pm.expect(pm.response).to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const responseData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response message is 'Edited successfully'\", function () {\r",
+							"     pm.expect(responseData.msg).to.equal(\"Edited successfully\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response matches the edited title\", function () {\r",
+							"pm.expect(responseData.idea).to.have.property(\"title\").that.equal(\"Edited Idea Title\");\r",
+							"// pm.expect(responseData.idea.title).to.equal(\"Edited Idea Title\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"title\": \"Edited Idea Title\", \r\n\"description\": \"Edited description\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/Idea/Edit?ideaId={{lastIdeaId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"Idea",
+						"Edit"
+					],
+					"query": [
+						{
+							"key": "ideaId",
+							"value": "{{lastIdeaId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete the Edited Idea",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"const responseData = pm.response.text();\r",
+							"\r",
+							"pm.test(\"Response body is a string\", function () {\r",
+							"    pm.expect(responseData).is.a(\"string\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is 'The idea is deleted!'\", function () {\r",
+							"pm.expect(responseData).to.contain(\"The idea is deleted!\");\r",
+							"// pm.expect(responseData).is.equal(\"The idea is deleted!\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"title\": \"Edited Idea Title\", \r\n\"description\": \"Edited description\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/Idea/Delete?ideaId={{lastIdeaId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"Idea",
+						"Delete"
+					],
+					"query": [
+						{
+							"key": "ideaId",
+							"value": "{{lastIdeaId}}"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -246,6 +409,10 @@
 		},
 		{
 			"key": "randomTitleVar",
+			"value": ""
+		},
+		{
+			"key": "lastIdeaId",
 			"value": ""
 		}
 	]
