@@ -17,15 +17,15 @@
 							"pm.expect(pm.response.code).to.equal(200);\r",
 							"});\r",
 							"\r",
-							"const responseBody = pm.response.json();\r",
+							"const responseData = pm.response.json();\r",
 							"\r",
 							"pm.test(\"Response body includes the attributes username, password and accessToken\", function () {\r",
-							"pm.expect(responseBody).to.have.property(\"username\").and.not.to.be.empty;\r",
-							"pm.expect(responseBody).to.have.property(\"password\").and.not.to.be.empty;\r",
-							"pm.expect(responseBody).to.have.property(\"accessToken\").and.not.to.be.empty;\r",
+							"pm.expect(responseData).to.have.property(\"username\").and.not.to.be.empty;\r",
+							"pm.expect(responseData).to.have.property(\"password\").and.not.to.be.empty;\r",
+							"pm.expect(responseData).to.have.property(\"accessToken\").and.not.to.be.empty;\r",
 							"});\r",
 							"\r",
-							"pm.collectionVariables.set(\"token\", responseBody.accessToken);\r",
+							"pm.collectionVariables.set(\"token\", responseData.accessToken);\r",
 							"\r",
 							""
 						],
@@ -35,9 +35,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "noauth"
-				},
 				"method": "POST",
 				"header": [],
 				"body": {
