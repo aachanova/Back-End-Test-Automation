@@ -108,7 +108,7 @@ namespace DemoAPITesting
             postRequest.AddBody(new { title = "SomeTitle", body = "SomeBody" });
 
             var postResponse = clientWithAuthentication.Execute(postRequest);
-            Console.WriteLine(postResponse.StatusCode);Console.ReadLine();
+            Console.WriteLine(postResponse);
         }
     }
 }
