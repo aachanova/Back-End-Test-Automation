@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using RestSharp;
 using RestSharp.Authenticators;
+using System.Reflection.Metadata.Ecma335;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace DemoAPITesting
@@ -18,7 +19,7 @@ namespace DemoAPITesting
             string weatherInfo = JsonSerializer.Serialize(forcast);
             Console.WriteLine(weatherInfo);
 
-            string jsonString = File.ReadAllText("D:\\Ani\\Back-End-Test-Automation-oth\\DemoData.json");
+            string jsonString = File.ReadAllText("D:\\Ani\\00-Back-End-Test-Automation-oth\\DemoData.json");
 
             WeatherForcast forcastFromJson = JsonSerializer.Deserialize<WeatherForcast>(jsonString);
 
@@ -28,7 +29,7 @@ namespace DemoAPITesting
             string weatherInfoNS = JsonConvert.SerializeObject(forcastNS, Formatting.Indented);
             Console.WriteLine(weatherInfoNS);
 
-            jsonString = File.ReadAllText("D:\\Ani\\Back-End-Test-Automation-oth\\DemoData.json");
+            jsonString = File.ReadAllText("D:\\Ani\\00-Back-End-Test-Automation-oth\\DemoData.json");
 
             WeatherForcast weatherInfoFromNS = JsonConvert.DeserializeObject<WeatherForcast>(jsonString);
 
@@ -103,8 +104,11 @@ namespace DemoAPITesting
             });
 
             var postRequest = new RestRequest("/repos/testnakov/test-nakov-repo/issues", Method.Post);
-            postRequest.AddHeader("Content-type", "application/json");
+            postRequest.AddHeader("Content-Type", "application/json");
             postRequest.AddBody(new { title = "SomeTitle", body = "SomeBody" });
+
+            var postResponse = clientWithAuthentication.Execute(postRequest);
+            Console.WriteLine(postResponse.StatusCode);Console.ReadLine();
         }
     }
 }
